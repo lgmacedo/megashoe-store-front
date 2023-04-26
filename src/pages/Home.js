@@ -1,3 +1,7 @@
+import Navegacao from "../components/Navegacao";
+
 export default function Home() {
-  return <>Tela HOME</>;
+  return (
+    <Navegacao index={0}/>
+  );
 }
