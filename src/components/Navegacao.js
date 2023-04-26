@@ -5,13 +5,13 @@ import { House, User, ShoppingCartSimple } from "@phosphor-icons/react";
 export default function Navegacao({ index = 0 }) {
   return (
     <StyledNavegacao index={index}>
-      <Link to="/">
+      <Link to="/home">
         <House size={32} weight="fill" />
       </Link>
-      <Link to="/">
+      <Link to="/user">
         <User size={32} weight="fill" />
       </Link>
-      <Link to="/">
+      <Link to="/carrinho">
         <ShoppingCartSimple size={32} weight="fill" />
       </Link>
     </StyledNavegacao>
@@ -30,10 +30,21 @@ const StyledNavegacao = styled.footer`
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  color: rgba(250, 250, 250, 0.4);
+
+  a {
+    color: rgba(250, 250, 250, 0.4);
+    transition: transform ease 0.25s;
+    &:hover {
+      transform: scale(1.2);
+    }
+    &:active {
+      transform: scale(1);
+    }
+  }
+
   ${({ index }) => {
     return `
-        svg:nth-of-type(${index + 1}) {
+        a:nth-of-type(${index + 1}) {
             color: #a3e635;
         }
     `;
