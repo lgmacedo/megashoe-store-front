@@ -1,12 +1,19 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { House, User, ShoppingCartSimple } from "@phosphor-icons/react";
 
 export default function Navegacao({ index = 0 }) {
   return (
     <StyledNavegacao index={index}>
-      <House size={32} weight="fill" />
-      <User size={32} weight="fill" />
-      <ShoppingCartSimple size={32} weight="fill" />
+      <Link to="/">
+        <House size={32} weight="fill" />
+      </Link>
+      <Link to="/">
+        <User size={32} weight="fill" />
+      </Link>
+      <Link to="/">
+        <ShoppingCartSimple size={32} weight="fill" />
+      </Link>
     </StyledNavegacao>
   );
 }
