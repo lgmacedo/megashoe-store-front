@@ -1,6 +1,38 @@
 import styled from "styled-components";
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import apiAuth from "../services/apiAuth";
 
 export default function Cadastro() {
+
+  const [form, setForm] = useState({nome: "", email: ""})
+  const [valida, setValida] = useState(false)
+  const [senha, setSenha] = useState("")
+  const [senhaRep, setSenhaRep] = useState("")
+  const navigate = useNavigate()
+
+  function handleForm(e){
+    setForm({...form, [e.target.name]: e.target.value})
+  }
+
+  useEffect(() => { setValida(senha === senhaRep);}, [senha, senhaRep])
+
+  function handleCadastro(e){
+    e.preventDefault()
+    if(valida){   
+      apiAuth.cadastro({...form, senha:senha})
+      .then(res=>{
+        alert(res.data)
+        navigate("/")
+      })
+      .catch(err => alert(err.response.data))
+    }
+    else{
+      return alert('As senhas não correspondem!')
+    }
+  }
+
+
 
 return(
   <CadastroContainer>
@@ -10,28 +42,36 @@ return(
       <p>Cria sua conta com email e senha</p>
     </Titulo>
 
-  <Form >
+  <Form onSubmit={handleCadastro}>
     <input 
       name="nome"
       placeholder="nome" 
       type="text" 
+      value={form.nome}
+      onChange={handleForm}
       required />
     <input 
       name="email"
       placeholder="email"
       type="email" 
+      value={form.email}
+      onChange={handleForm}
       required/>
     <input 
-      name="senhanova"
+      name="senha"
       placeholder="senha" 
       type="password" 
       autoComplete="new-password"
+      value={senha}
+      onChange={(e)=>setSenha(e.target.value)}
       required/>
     <input 
-      name="senharepetida"
+      name="senhaRep"
       placeholder="confirmar senha" 
       type="password" 
       autoComplete="new-password"
+      value={senhaRep}
+      onChange={(e)=>setSenhaRep(e.target.value)}
       required/>
     <button type="submit">Cadastrar</button>
   </Form>
@@ -68,12 +108,14 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 `
-const Login = styled.div`
+const Login = styled(Link)`
 margin-top: 32px;
 font-style: normal;
 line-height: 18px;
 font-family: 'Lexend Deca';
 font-weight: 400;
+text-decoration: none;
+color: #FAFAFA;
 span{
   color: #A3E635;
 }
@@ -95,6 +137,9 @@ const Form = styled.form`
     outline: none;
     padding: 15px;
     margin: 1px;
+    font-size: 18px;
+    color: white;
+    font-family: 'Lexend Deca';
     ::placeholder{
       font-family: 'Lexend Deca';
       font-style: normal;
@@ -110,6 +155,8 @@ const Form = styled.form`
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
+    color: black;
+    cursor: pointer;
   }
 `
 
