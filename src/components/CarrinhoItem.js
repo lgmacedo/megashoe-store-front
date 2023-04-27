@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { converterValorParaReais } from "../utils/converterValorParaReais.js";
+import { Trash } from "@phosphor-icons/react";
 
 export default function CarrinhoItem({
   imagem,
@@ -24,6 +25,9 @@ export default function CarrinhoItem({
           <button onClick={decrementar}>-</button>
         </div>
       </StyledCarrinhoItemInformacoes>
+      <StyledCarrinhoItemDeletar onClick={deletar}>
+        <Trash weight="fill" size={24} />
+      </StyledCarrinhoItemDeletar>
     </StyledCarrinhoItem>
   );
 }
@@ -84,6 +88,25 @@ const StyledCarrinhoItemInformacoes = styled.div`
       &:active {
         transform: scale(0.9);
       }
+    }
+  }
+`;
+
+const StyledCarrinhoItemDeletar = styled.button`
+  background: #1e1e1e;
+  width: 46px;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+
+  &:active {
+    svg {
+      transform: scale(0.9);
+      transition: transform ease 0.25s;
+      will-change: auto;
     }
   }
 `;

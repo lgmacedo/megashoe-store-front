@@ -18,7 +18,9 @@ export default function Carrinho() {
     setItens([...itens]);
   }
 
-  function handleDeletarItem(idItem) {}
+  function handleDeletarItem(idItem) {
+    console.log(idItem);
+  }
 
   const total = itens.reduce(
     (prev, curr) => prev + curr.quantidade * curr.preco,

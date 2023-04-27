@@ -13,4 +13,11 @@ function addItemCarrinho(item) {
   localStorage.setItem(KEY_CARRINHO, JSON.stringify(item));
 }
 
-export { getItensCarrinho, addItemCarrinho, setItensCarrinho };
+function removerItemCarrinho(id) {}
+
+export {
+  getItensCarrinho,
+  addItemCarrinho,
+  setItensCarrinho,
+  removerItemCarrinho,
+};
