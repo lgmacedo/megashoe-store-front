@@ -1,32 +1,63 @@
 import Navegacao from "../components/Navegacao";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { converterValorParaReais } from "../utils/converterValorParaReais";
 
 export default function Home() {
+  const api = axios.create({
+    baseURL: process.env.REACT_APP_API_URL,
+  });
+
+  const [produtos, setProdutos] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const promise = api.get("/produtos");
+    promise.then(produtosSuccess);
+    promise.catch(produtosFailed);
+  }, []);
+
+  function produtosSuccess(res) {
+    setProdutos(res.data);
+  }
+
+  function produtosFailed(err) {
+    alert(err.response.message);
+  }
+
+  function addToCart(id){
+    const promise = api.post("/pedidos", {id});
+    promise.then(cartSuccess);
+    promise.catch(cartFailed);
+  }
+
+  function cartSuccess(res){
+    alert("Produto adicionado ao carrinho com sucesso");
+  }
+
+  function cartFailed(err){
+    alert(err.response.message);
+  }
+
   return (
     <>
       <ProductsContainer>
-        <Product>
-          <ProductInfo>
-            <img
-              alt="product-picture"
-              src="https://cdn-icons-png.flaticon.com/512/1785/1785340.png"
-            />
-            <p>Adidas Shoe</p>
-            <p>R$ 2.000,00</p>
-          </ProductInfo>
-          <AddToCart>+ carrinho</AddToCart>
-        </Product>
-        <Product>
-          <ProductInfo>
-            <img
-              alt="product-picture"
-              src="https://www.pngmart.com/files/6/Shoe-PNG-Pic.png"
-            />
-            <p>Converse</p>
-            <p>R$ 1.000,00</p>
-          </ProductInfo>
-          <AddToCart>+ carrinho</AddToCart>
-        </Product>
+        {produtos.map((p) => (
+          <Product key={p._id}>
+            <ProductInfo onClick={()=>navigate(`/detalhes/${p._id}`)}>
+              <img
+                alt="product-picture"
+                src={p.imagem}
+              />
+              <p>{p.nome}</p>
+              <p>{converterValorParaReais(p.preco)}</p>
+            </ProductInfo>
+            <AddToCart onClick={()=>addToCart(p._id)}>+ carrinho</AddToCart>
+          </Product>
+        ))}
       </ProductsContainer>
       <Navegacao index={0} />
     </>
@@ -61,14 +92,14 @@ const ProductInfo = styled.div`
   height: 202.11px;
   img {
     width: 110px;
-    margin-bottom: 15.87px;
+    margin-bottom: 5px;
   }
-  p:nth-child(2){
+  p:nth-child(2) {
     color: #fafafa;
     font-weight: 500;
     margin-bottom: 15.55px;
   }
-  p:nth-child(3){
+  p:nth-child(3) {
     color: #d2cfcf;
     font-weight: 600;
     margin-bottom: 24.3px;
