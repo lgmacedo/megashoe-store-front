@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { converterValorParaReais } from "../utils/converterValorParaReais";
+import { addItemCarrinho } from "../storage/carrinho.storage";
 
 export default function Home() {
   const api = axios.create({
@@ -11,6 +12,8 @@ export default function Home() {
   });
 
   const [produtos, setProdutos] = useState([]);
+
+  let idProduto = null;
 
   const navigate = useNavigate();
 
@@ -29,12 +32,14 @@ export default function Home() {
   }
 
   function addToCart(id){
+    idProduto = id;
     const promise = api.post("/pedidos", {id});
     promise.then(cartSuccess);
     promise.catch(cartFailed);
   }
 
-  function cartSuccess(res){
+  function cartSuccess(){
+    addItemCarrinho(idProduto);
     alert("Produto adicionado ao carrinho com sucesso");
   }
 
