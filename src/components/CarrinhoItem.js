@@ -10,7 +10,6 @@ export default function CarrinhoItem({
   decrementar,
   deletar,
 }) {
-  console.log(deletar);
   return (
     <StyledCarrinhoItem>
       <img src={imagem} alt={titulo} />

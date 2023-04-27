@@ -1,20 +1,10 @@
 import styled from "styled-components";
+import { useState } from "react";
 import Navegacao from "../components/Navegacao.js";
 import CarrinhoItem from "../components/CarrinhoItem.js";
 import { BotaoCustom } from "../styled.js";
 import { converterValorParaReais } from "../utils/converterValorParaReais.js";
-import { useState } from "react";
-
-const KEY_CARRINHO = "carrinho";
-
-function getItensCarrinho() {
-  const itens = JSON.parse(localStorage.getItem(KEY_CARRINHO));
-  return itens ?? [];
-}
-
-// function setItensCarrinho(itens) {
-//   localStorage.setItem(KEY_CARRINHO, JSON.stringify(itens));
-// }
+import { getItensCarrinho } from "../storage/carrinho.storage.js";
 
 export default function Carrinho() {
   const [itens, setItens] = useState(getItensCarrinho());
@@ -48,7 +38,7 @@ export default function Carrinho() {
                 preco={item.preco}
                 incrementar={() => handleQuantidade(item.id, "+")}
                 decrementar={() => handleQuantidade(item.id, "-")}
-                deletar={handleDeletarItem}
+                deletar={() => handleDeletarItem(item.id)}
               />
             </li>
           ))}
