@@ -1,7 +1,16 @@
 import styled from "styled-components";
 import { converterValorParaReais } from "../utils/converterValorParaReais.js";
 
-export default function CarrinhoItem({ imagem, titulo, preco }) {
+export default function CarrinhoItem({
+  imagem,
+  titulo,
+  preco,
+  quantidade,
+  incrementar,
+  decrementar,
+  deletar,
+}) {
+  console.log(deletar);
   return (
     <StyledCarrinhoItem>
       <img src={imagem} alt={titulo} />
@@ -11,7 +20,9 @@ export default function CarrinhoItem({ imagem, titulo, preco }) {
           <p>{converterValorParaReais(preco)}</p>
         </div>
         <div>
-          <button>+</button>1<button>-</button>
+          <button onClick={incrementar}>+</button>
+          {quantidade}
+          <button onClick={decrementar}>-</button>
         </div>
       </StyledCarrinhoItemInformacoes>
     </StyledCarrinhoItem>

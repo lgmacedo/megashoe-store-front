@@ -10,7 +10,6 @@ const BotaoCustom = styled.button`
   color: #171717;
   font-size: 18px;
   font-weight: 500;
-  margin-top: 32px;
 
   &:disabled {
     opacity: 0.25;
