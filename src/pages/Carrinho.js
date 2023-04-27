@@ -1,28 +1,50 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navegacao from "../components/Navegacao.js";
 import CarrinhoItem from "../components/CarrinhoItem.js";
 import { BotaoCustom } from "../styled.js";
 import { converterValorParaReais } from "../utils/converterValorParaReais.js";
-import { getItensCarrinho } from "../storage/carrinho.storage.js";
+import {
+  addItemCarrinho,
+  removerItemCarrinho,
+  removerUmItemCarrinho,
+} from "../storage/carrinho.storage.js";
+import { buscarProdutosCarrinho } from "../services/carrinho.services.js";
 
 export default function Carrinho() {
-  const [itens, setItens] = useState(getItensCarrinho());
+  const [produtos, setProdutos] = useState([]);
 
-  function handleQuantidade(idItem, tipo) {
-    const item = itens.find((item) => item.id === idItem);
+  useEffect(() => {
+    buscarProdutosCarrinho().then((produtos) => setProdutos(produtos));
+  }, []);
+
+  function handleIncrementar(idItem) {
+    const item = produtos.find((item) => item._id === idItem);
     if (!item) return;
-    if (tipo === "+") item.quantidade++;
-    else if (tipo === "-") item.quantidade--;
-    if (item.quantidade < 1) item.quantidade = 1;
-    setItens([...itens]);
+    item.quantidade++;
+    setProdutos([...produtos]);
+    addItemCarrinho(idItem);
+  }
+
+  function handleDecrementar(idItem) {
+    const item = produtos.find((item) => item._id === idItem);
+    if (!item) return;
+    item.quantidade--;
+    if (item.quantidade < 1) {
+      item.quantidade = 1;
+      return;
+    }
+    setProdutos([...produtos]);
+    removerUmItemCarrinho(idItem);
   }
 
   function handleDeletarItem(idItem) {
-    console.log(idItem);
+    const novosProdutos = produtos.filter((produto) => produto._id !== idItem);
+    setProdutos([...novosProdutos]);
+    removerItemCarrinho(idItem);
   }
 
-  const total = itens.reduce(
+  const total = produtos.reduce(
     (prev, curr) => prev + curr.quantidade * curr.preco,
     0
   );
@@ -31,16 +53,16 @@ export default function Carrinho() {
     <div>
       <CarrinhoMain>
         <ul>
-          {itens.map((item) => (
-            <li key={item.id}>
+          {produtos.map((item) => (
+            <li key={item._id}>
               <CarrinhoItem
                 quantidade={item.quantidade}
                 imagem={item.imagem}
                 titulo={item.titulo}
                 preco={item.preco}
-                incrementar={() => handleQuantidade(item.id, "+")}
-                decrementar={() => handleQuantidade(item.id, "-")}
-                deletar={() => handleDeletarItem(item.id)}
+                incrementar={() => handleIncrementar(item._id)}
+                decrementar={() => handleDecrementar(item._id)}
+                deletar={() => handleDeletarItem(item._id)}
               />
             </li>
           ))}

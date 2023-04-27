@@ -9,15 +9,29 @@ function setItensCarrinho(itens) {
   localStorage.setItem(KEY_CARRINHO, JSON.stringify(itens));
 }
 
-function addItemCarrinho(item) {
-  localStorage.setItem(KEY_CARRINHO, JSON.stringify(item));
+function addItemCarrinho(idItem) {
+  const itens = getItensCarrinho();
+  itens.push(idItem);
+  setItensCarrinho(itens);
 }
 
-function removerItemCarrinho(id) {}
+function removerUmItemCarrinho(idItem) {
+  const itens = getItensCarrinho();
+  const idx = itens.findIndex((id) => id === idItem);
+  itens.splice(idx, 1);
+  setItensCarrinho(itens);
+}
+
+function removerItemCarrinho(id) {
+  const idItems = getItensCarrinho();
+  const novosItens = idItems.filter((idItem) => idItem !== id);
+  setItensCarrinho(novosItens);
+}
 
 export {
   getItensCarrinho,
   addItemCarrinho,
   setItensCarrinho,
   removerItemCarrinho,
+  removerUmItemCarrinho,
 };
