@@ -5,7 +5,7 @@ const client = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
 async function getProdutoById(idProduto) {
   try {
-    const res = await client.get(`/produto/${idProduto}`);
+    const res = await client.get(`/detalhes/${idProduto}`);
     return res.data;
   } catch (err) {
     return null;
