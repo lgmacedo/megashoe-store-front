@@ -4,7 +4,7 @@ import { Trash } from "@phosphor-icons/react";
 
 export default function CarrinhoItem({
   imagem,
-  titulo,
+  nome,
   preco,
   quantidadeSelecionada,
   incrementar,
@@ -13,10 +13,10 @@ export default function CarrinhoItem({
 }) {
   return (
     <StyledCarrinhoItem>
-      <img src={imagem} alt={titulo} />
+      <img src={imagem} alt={nome} />
       <StyledCarrinhoItemInformacoes>
         <div>
-          <p>{titulo}</p>
+          <p>{nome}</p>
           <p>{converterValorParaReais(preco)}</p>
         </div>
         <div>

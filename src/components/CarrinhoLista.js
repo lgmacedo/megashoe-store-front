@@ -40,7 +40,7 @@ export default function CarrinhoLista({ produtos, setProdutos }) {
           <CarrinhoItem
             quantidadeSelecionada={item.quantidadeSelecionada}
             imagem={item.imagem}
-            titulo={item.titulo}
+            nome={item.nome}
             preco={item.preco}
             incrementar={() => handleIncrementar(item._id)}
             decrementar={() => handleDecrementar(item._id)}
