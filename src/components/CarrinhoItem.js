@@ -6,7 +6,7 @@ export default function CarrinhoItem({
   imagem,
   titulo,
   preco,
-  quantidade,
+  quantidadeSelecionada,
   incrementar,
   decrementar,
   deletar,
@@ -21,7 +21,7 @@ export default function CarrinhoItem({
         </div>
         <div>
           <button onClick={incrementar}>+</button>
-          {quantidade}
+          {quantidadeSelecionada}
           <button onClick={decrementar}>-</button>
         </div>
       </StyledCarrinhoItemInformacoes>

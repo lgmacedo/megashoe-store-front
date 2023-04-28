@@ -28,10 +28,15 @@ function removerItemCarrinho(id) {
   setItensCarrinho(novosItens);
 }
 
+function limparCarrinho() {
+  localStorage.removeItem(KEY_CARRINHO);
+}
+
 export {
   getItensCarrinho,
   addItemCarrinho,
   setItensCarrinho,
   removerItemCarrinho,
   removerUmItemCarrinho,
+  limparCarrinho,
 };
