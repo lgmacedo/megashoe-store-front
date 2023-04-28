@@ -1,12 +1,12 @@
-import axios from "axios"
+import apiClient from "./api.client.js";
 
 function login(body){
-    const promise = axios.post(`${process.env.REACT_APP_API_URL}/`, body)
+    const promise = apiClient.post('/', body)
     return promise
 }
 
 function cadastro(body){
-    const promise = axios.post(`${process.env.REACT_APP_API_URL}/cadastro`, body)
+    const promise = apiClient.post(`/cadastro`, body)
     return promise
 }
 

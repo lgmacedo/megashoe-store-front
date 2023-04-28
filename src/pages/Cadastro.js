@@ -22,10 +22,11 @@ export default function Cadastro() {
     if(valida){   
       apiAuth.cadastro({...form, senha:senha})
       .then(res=>{
+        console.log(res.data)
         alert(res.data)
         navigate("/")
-      })
-      .catch(err => alert(err.response.data))
+      }).catch(err => {
+        alert(err.response.data)})
     }
     else{
       return alert('As senhas não correspondem!')
