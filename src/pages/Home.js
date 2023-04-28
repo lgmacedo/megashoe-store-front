@@ -6,15 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { converterValorParaReais } from "../utils/converterValorParaReais";
 import { addItemCarrinho } from "../storage/carrinho.storage";
 
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+});
+
 export default function Home() {
-  const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-  });
-
   const [produtos, setProdutos] = useState([]);
-
-  let idProduto = null;
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,22 +25,21 @@ export default function Home() {
   }
 
   function produtosFailed(err) {
-    alert(err.response.message);
+    alert(err.message);
   }
 
-  function addToCart(id){
-    idProduto = id;
-    const promise = api.post("/pedidos", {id});
-    promise.then(cartSuccess);
+  function addToCart(id) {
+    const promise = api.get(`/produtos/checar/${id}`);
+    promise.then(() => cartSuccess(id));
     promise.catch(cartFailed);
   }
 
-  function cartSuccess(){
-    addItemCarrinho(idProduto);
+  function cartSuccess(id) {
+    addItemCarrinho(id);
     alert("Produto adicionado ao carrinho com sucesso");
   }
 
-  function cartFailed(err){
+  function cartFailed(err) {
     alert(err.response.message);
   }
 
@@ -52,15 +48,12 @@ export default function Home() {
       <ProductsContainer>
         {produtos.map((p) => (
           <Product key={p._id}>
-            <ProductInfo onClick={()=>navigate(`/detalhes/${p._id}`)}>
-              <img
-                alt="product-picture"
-                src={p.imagem}
-              />
+            <ProductInfo onClick={() => navigate(`/detalhes/${p._id}`)}>
+              <img alt={p.nome} src={p.imagem} />
               <p>{p.nome}</p>
               <p>{converterValorParaReais(p.preco)}</p>
             </ProductInfo>
-            <AddToCart onClick={()=>addToCart(p._id)}>+ carrinho</AddToCart>
+            <AddToCart onClick={() => addToCart(p._id)}>+ carrinho</AddToCart>
           </Product>
         ))}
       </ProductsContainer>
@@ -84,6 +77,7 @@ const Product = styled.div`
   height: 240px;
   background-color: #404040;
   border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
 `;
 
@@ -96,8 +90,10 @@ const ProductInfo = styled.div`
   line-height: 20px;
   height: 202.11px;
   img {
-    width: 110px;
-    margin-bottom: 5px;
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    margin-bottom: auto;
   }
   p:nth-child(2) {
     color: #fafafa;
