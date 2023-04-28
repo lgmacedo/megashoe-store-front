@@ -6,23 +6,20 @@ import { converterValorParaReais } from "../utils/converterValorParaReais";
 import { ArrowCircleLeft } from "@phosphor-icons/react";
 import { addItemCarrinho } from "../storage/carrinho.storage";
 
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+});
+
 export default function Detalhes() {
-  const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-  });
-
   const [produto, setProduto] = useState({ preco: 0 });
-
   const navigate = useNavigate();
-
   const { idProduto } = useParams();
-  console.log(idProduto);
 
   useEffect(() => {
-    const promise = api.get(`/detalhes/${idProduto}`);
+    const promise = api.get(`/produtos/${idProduto}`);
     promise.then(produtoSuccess);
     promise.catch(produtoFailed);
-  }, []);
+  });
 
   function produtoSuccess(res) {
     setProduto(res.data);
@@ -33,30 +30,35 @@ export default function Detalhes() {
     navigate("/home");
   }
 
-  function addToCart(id){
-    const promise = api.post("/pedidos", {id});
+  function addToCart(id) {
+    const promise = api.get(`/produtos/checar/${id}`);
     promise.then(cartSuccess);
     promise.catch(cartFailed);
   }
 
-  function cartSuccess(res){
+  function cartSuccess(_) {
     addItemCarrinho(produto._id);
     alert("Produto adicionado ao carrinho com sucesso");
   }
 
-  function cartFailed(err){
+  function cartFailed(err) {
     alert(err.response.message);
   }
 
   return (
     <ProductDetailsContainer>
-      <img alt="product-picture" src={produto.imagem} />
+      <img alt={produto.nome} src={produto.imagem} />
       <p>{produto.nome}</p>
       <p>{converterValorParaReais(produto.preco)}</p>
-      <button onClick={()=>addToCart(produto._id)}>+ carrinho</button>
+      <button onClick={() => addToCart(produto._id)}>+ carrinho</button>
       <p>Mais detalhes</p>
       <p>{produto.descricao}</p>
-      <ArrowCircleLeft onClick={()=>navigate("/home")} size={50} color="#A3E635" weight="duotone" />
+      <ArrowCircleLeft
+        onClick={() => navigate("/home")}
+        size={64}
+        color="#404040"
+        weight="duotone"
+      />
     </ProductDetailsContainer>
   );
 }
@@ -64,11 +66,23 @@ export default function Detalhes() {
 const ProductDetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 32px;
   position: relative;
+
   img {
     margin-bottom: 41px;
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
   }
+
+  & > :not(img) {
+    margin: 0 32px;
+  }
+
+  svg:last-of-type {
+    margin-top: 24px;
+  }
+
   p:nth-child(2) {
     font-weight: 600;
     font-size: 32px;
@@ -110,7 +124,7 @@ const ProductDetailsContainer = styled.div`
     line-height: 18px;
     color: #a3a3a3;
   }
-  svg{
+  svg {
     position: absolute;
     cursor: pointer;
   }
