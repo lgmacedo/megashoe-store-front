@@ -1,14 +1,20 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navegacao from "../components/Navegacao.js";
 import { BotaoCustom } from "../styled.js";
 import { converterValorParaReais } from "../utils/converterValorParaReais.js";
 import { buscarProdutosCarrinho } from "../services/carrinho.services.js";
 import CarrinhoLista from "../components/CarrinhoLista.js";
 import { getItensCarrinho } from "../storage/carrinho.storage.js";
+import { criarPedido } from "../services/pedido.services.js";
+import { UserContext } from "../contexts/UserContext.js";
+import { limparCarrinho } from "../storage/carrinho.storage.js";
+import { useNavigate } from "react-router-dom";
 
 export default function Carrinho() {
   const [produtos, setProdutos] = useState([]);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     buscarProdutosCarrinho(getItensCarrinho()).then((produtos) =>
@@ -20,16 +26,37 @@ export default function Carrinho() {
     return prev + curr.quantidadeSelecionada * curr.preco;
   }, 0);
 
+  function handleComprar() {
+    const produtosComprados = produtos.map((p) => ({
+      idProduto: p._id,
+      quantidadeSelecionada: p.quantidadeSelecionada,
+    }));
+
+    criarPedido({ produtos: produtosComprados, token: user.token })
+      .then((_) => {
+        alert("Pedido feito com sucesso!");
+        limparCarrinho();
+        navigate("/home");
+      })
+      .catch((err) => alert(err.message));
+  }
+
   return (
     <>
       <CarrinhoMain>
-        <CarrinhoLista produtos={produtos} setProdutos={setProdutos} />
+        {produtos.length === 0 ? (
+          "Seu carrinho está vazio!"
+        ) : (
+          <CarrinhoLista produtos={produtos} setProdutos={setProdutos} />
+        )}
         <hr />
         <CarrinhoMainTotal>
           <strong>Total:</strong>
           <strong>{converterValorParaReais(valorTotal)}</strong>
         </CarrinhoMainTotal>
-        <BotaoCustom>Comprar</BotaoCustom>
+        <BotaoCustom disabled={produtos.length === 0} onClick={handleComprar}>
+          Comprar
+        </BotaoCustom>
       </CarrinhoMain>
       <Navegacao index={2} />
     </>
@@ -38,6 +65,10 @@ export default function Carrinho() {
 
 const CarrinhoMain = styled.main`
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 75px);
   hr {
     border: none;
     height: 1px;
@@ -48,15 +79,14 @@ const CarrinhoMain = styled.main`
 
 const CarrinhoMainTotal = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  font-size: 24px;
+  font-size: 20px;
   width: 100%;
-  font-weight: 600;
   margin-bottom: 32px;
 
   strong:last-child {
     color: #a3e635;
+    font-weight: 600;
   }
 `;
