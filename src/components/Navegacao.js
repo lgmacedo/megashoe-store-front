@@ -36,6 +36,10 @@ const StyledNavegacao = styled.footer`
     justify-content: space-between;
     height: 100%;
 
+    a:nth-of-type(2) {
+      order: 3;
+    }
+
     a {
       color: rgba(250, 250, 250, 0.4);
       transition: transform ease 0.25s;
