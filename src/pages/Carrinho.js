@@ -10,6 +10,7 @@ import { criarPedido } from "../services/pedido.services.js";
 import { UserContext } from "../contexts/UserContext.js";
 import { limparCarrinho } from "../storage/carrinho.storage.js";
 import { useNavigate } from "react-router-dom";
+import { calcularTotal } from "../utils/calcularTotal.js";
 
 export default function Carrinho() {
   const [produtos, setProdutos] = useState([]);
@@ -22,9 +23,7 @@ export default function Carrinho() {
     );
   }, []);
 
-  const valorTotal = produtos.reduce((prev, curr) => {
-    return prev + curr.quantidadeSelecionada * curr.preco;
-  }, 0);
+  const valorTotal = calcularTotal(produtos);
 
   function handleComprar() {
     const produtosComprados = produtos.map((p) => ({
