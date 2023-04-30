@@ -33,10 +33,9 @@ export default function Carrinho() {
     }));
 
     criarPedido({ produtos: produtosComprados, token: user.token })
-      .then((_) => {
-        alert("Pedido feito com sucesso!");
+      .then((idPedido) => {
         limparCarrinho();
-        navigate("/home");
+        navigate(`/confirmacao/${idPedido}`);
       })
       .catch((err) => alert(err.message));
   }

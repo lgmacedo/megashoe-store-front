@@ -1,3 +1,7 @@
+import { useParams } from "react-router-dom";
+
 export default function Confirmacao() {
-  return <>Confirmação</>;
+  const { idPedido } = useParams();
+
+  return <>{idPedido}</>;
 }
