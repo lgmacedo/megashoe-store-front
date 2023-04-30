@@ -1,14 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getPedido } from "../services/pedido.services.js";
+import {
+  buscarProdutosPedido,
+  getPedido,
+} from "../services/pedido.services.js";
 import { UserContext } from "../contexts/UserContext.js";
 import styled from "styled-components";
-import { buscarProdutosCarrinho } from "../services/carrinho.services.js";
 import { converterValorParaReais } from "../utils/converterValorParaReais.js";
 import { CheckCircle } from "@phosphor-icons/react";
 import { BotaoCustom } from "../styled.js";
 import ItemPedido from "../components/ItemPedido.js";
 import { calcularTotal } from "../utils/calcularTotal.js";
+import { converterTimestamp } from "../utils/converterTimestamp.js";
 
 export default function Confirmacao() {
   const { user } = useContext(UserContext);
@@ -25,8 +28,8 @@ export default function Confirmacao() {
 
   useEffect(() => {
     if (!pedido) return;
-    buscarProdutosCarrinho(pedido.produtos.map((p) => p.idProduto)).then(
-      (produtos) => setProdutos(produtos)
+    buscarProdutosPedido(pedido.produtos).then((produtos) =>
+      setProdutos(produtos)
     );
   }, [pedido]);
 
@@ -41,6 +44,7 @@ export default function Confirmacao() {
       <ul>
         {produtos?.map((item) => (
           <ItemPedido
+            key={item._id}
             quantidadeSelecionada={item.quantidadeSelecionada}
             imagem={item.imagem}
             nome={item.nome}
@@ -56,7 +60,7 @@ export default function Confirmacao() {
         </div>
         <div>
           <p>Data:</p>
-          <p>{pedido?.criadoEm}</p>
+          <p>{converterTimestamp(pedido?.criadoEm)}</p>
         </div>
       </ConfirmacaoPedidoInfo>
       <Link to="/home">

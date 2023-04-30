@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import apiClient from "./api.client.js";
+import { getProdutosPorId } from "./produto.services.js";
 
 async function listarPedidos({ token }) {
   try {
@@ -45,4 +46,22 @@ async function criarPedido({ produtos, token }) {
   }
 }
 
-export { criarPedido, getPedido, listarPedidos };
+async function buscarProdutosPedido(produtosComprados) {
+  if (!produtosComprados) return [];
+
+  const detalhesDosProdutos = await getProdutosPorId(
+    produtosComprados.map((p) => p.idProduto)
+  );
+
+  const contagem = {};
+  produtosComprados.forEach((p) => {
+    contagem[p.idProduto] = p.quantidadeSelecionada;
+  });
+
+  detalhesDosProdutos?.forEach(
+    (produto) => (produto.quantidadeSelecionada = contagem[produto._id])
+  );
+  return detalhesDosProdutos ?? [];
+}
+
+export { criarPedido, getPedido, listarPedidos, buscarProdutosPedido };
