@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { converterValorParaReais } from "../utils/converterValorParaReais";
 import { ArrowCircleLeft } from "@phosphor-icons/react";
 import { addItemCarrinho } from "../storage/carrinho.storage";
+import { BotaoCustom } from "../styled.js";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -50,7 +51,9 @@ export default function Detalhes() {
       <img alt={produto.nome} src={produto.imagem} />
       <p>{produto.nome}</p>
       <p>{converterValorParaReais(produto.preco)}</p>
-      <button onClick={() => addToCart(produto._id)}>+ carrinho</button>
+      <BotaoCustom onClick={() => addToCart(produto._id)}>
+        + carrinho
+      </BotaoCustom>
       <p>Mais detalhes</p>
       <p>{produto.descricao}</p>
       <ArrowCircleLeft
@@ -98,18 +101,8 @@ const ProductDetailsContainer = styled.div`
     margin-bottom: 41px;
   }
   button {
-    width: 326px;
-    height: 45px;
-    background: #a3e635;
-    border-radius: 12px;
-    border: 0px;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 22px;
-    color: #171717;
-    cursor: pointer;
+    width: calc(100% - 64px);
     margin-bottom: 41px;
-    font-family: "Lexend Deca";
   }
   p:nth-child(5) {
     margin-bottom: 12px;
