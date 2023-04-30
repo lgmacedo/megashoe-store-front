@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
 		color: #fafafa;
 	}
 	::-webkit-scrollbar {
-         display: none;
+        display: none;
     }
 `;
 
