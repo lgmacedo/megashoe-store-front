@@ -1,10 +1,11 @@
 import Navegacao from "../components/Navegacao";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { converterValorParaReais } from "../utils/converterValorParaReais";
 import { addItemCarrinho } from "../storage/carrinho.storage";
+import { UserContext } from "../contexts/UserContext.js";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -13,6 +14,7 @@ const api = axios.create({
 export default function Home() {
   const [produtos, setProdutos] = useState([]);
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const promise = api.get("/produtos");
@@ -45,6 +47,10 @@ export default function Home() {
 
   return (
     <>
+      <SaudacaoHome>
+        <h1>Olá, {user?.nome}!</h1>
+        <p>Do que precisa hoje?</p>
+      </SaudacaoHome>
       <ProductsContainer>
         {produtos.map((p) => (
           <Product key={p._id}>
@@ -62,18 +68,34 @@ export default function Home() {
   );
 }
 
+const SaudacaoHome = styled.div`
+  padding: 32px 32px 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 16px;
+    color: #a3a3a3;
+  }
+`;
+
 const ProductsContainer = styled.div`
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
   column-gap: 16px;
   row-gap: 24px;
-  padding: 44px 32px 44px 32px;
+  padding: 44px 32px;
   margin-bottom: 74px;
 `;
 
 const Product = styled.div`
-  width: 150px;
+  flex: 1 1 150px;
   height: 240px;
   background-color: #404040;
   border-radius: 12px;
