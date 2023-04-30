@@ -11,6 +11,7 @@ import { UserContext } from "../contexts/UserContext.js";
 import { limparCarrinho } from "../storage/carrinho.storage.js";
 import { useNavigate } from "react-router-dom";
 import { calcularTotal } from "../utils/calcularTotal.js";
+import CarrinhoVazio from "../components/CarrinhoVazio.js";
 
 export default function Carrinho() {
   const [produtos, setProdutos] = useState([]);
@@ -43,18 +44,22 @@ export default function Carrinho() {
     <>
       <CarrinhoMain>
         {produtos.length === 0 ? (
-          "Seu carrinho está vazio!"
+          <CarrinhoVazio />
         ) : (
-          <CarrinhoLista produtos={produtos} setProdutos={setProdutos} />
+          <>
+            <CarrinhoLista produtos={produtos} setProdutos={setProdutos} />
+            <hr />
+            <CarrinhoMainTotal>
+              <strong>Total:</strong>
+              <strong>{converterValorParaReais(valorTotal)}</strong>
+            </CarrinhoMainTotal>
+            <BotaoCustom
+              disabled={produtos.length === 0}
+              onClick={handleComprar}>
+              Comprar
+            </BotaoCustom>
+          </>
         )}
-        <hr />
-        <CarrinhoMainTotal>
-          <strong>Total:</strong>
-          <strong>{converterValorParaReais(valorTotal)}</strong>
-        </CarrinhoMainTotal>
-        <BotaoCustom disabled={produtos.length === 0} onClick={handleComprar}>
-          Comprar
-        </BotaoCustom>
       </CarrinhoMain>
       <Navegacao index={2} />
     </>
@@ -66,6 +71,7 @@ const CarrinhoMain = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   min-height: calc(100vh - 75px);
   hr {
     border: none;

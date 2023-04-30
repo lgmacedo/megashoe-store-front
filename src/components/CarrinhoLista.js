@@ -56,4 +56,5 @@ const StyledCarrinhoLista = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 `;
