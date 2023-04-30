@@ -25,13 +25,15 @@ function contarProdutosNoCarrinho(ids) {
 }
 
 async function buscarProdutosCarrinho(ids) {
+  if (!ids) return [];
   const produtos = await getProdutosPorId(ids);
+
+  if (!produtos) return [];
   const contagemIds = contarProdutosNoCarrinho(ids);
 
-  produtos.forEach(
+  produtos?.forEach(
     (produto) => (produto.quantidadeSelecionada = contagemIds[produto._id])
   );
-
   return produtos ?? [];
 }
 
