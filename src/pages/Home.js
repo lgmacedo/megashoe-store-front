@@ -1,65 +1,80 @@
 import Navegacao from "../components/Navegacao";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import apiClient from "../services/api.client.js";
 import { useNavigate } from "react-router-dom";
 import { converterValorParaReais } from "../utils/converterValorParaReais";
 import { addItemCarrinho } from "../storage/carrinho.storage";
 import { UserContext } from "../contexts/UserContext.js";
+import { useMutation, useRequest } from "../hooks/request.hooks.js";
+import {
+  ErroModal,
+  SucessoModal,
+  CarregamentoModal,
+} from "../components/Modal.js";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-});
+async function buscarProdutos() {
+  try {
+    return (await apiClient.get("/produtos")).data;
+  } catch (err) {
+    throw Error(err.response?.data ?? err.message);
+  }
+}
+
+async function addToCart(id) {
+  try {
+    const res = await apiClient.get(`/produtos/checar/${id}`);
+    addItemCarrinho(id);
+    return res;
+  } catch (err) {
+    throw Error(err.response?.data ?? err.message);
+  }
+}
 
 export default function Home() {
-  const [produtos, setProdutos] = useState([]);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const {
+    loading: loadingProdutos,
+    error: errorProdutos,
+    data: produtos,
+  } = useRequest(buscarProdutos);
 
-  useEffect(() => {
-    const promise = api.get("/produtos");
-    promise.then(produtosSuccess);
-    promise.catch(produtosFailed);
-  }, []);
+  const {
+    loading: loadingCart,
+    error: errorCarrinho,
+    mutate: adicionarItemNoCarrinho,
+    data: respostaCarrinho,
+  } = useMutation(addToCart);
 
-  function produtosSuccess(res) {
-    setProdutos(res.data);
-  }
-
-  function produtosFailed(err) {
-    alert(err.message);
-  }
-
-  function addToCart(id) {
-    const promise = api.get(`/produtos/checar/${id}`);
-    promise.then(() => cartSuccess(id));
-    promise.catch(cartFailed);
-  }
-
-  function cartSuccess(id) {
-    addItemCarrinho(id);
-    alert("Produto adicionado ao carrinho com sucesso");
-  }
-
-  function cartFailed(err) {
-    alert(err.response.message);
+  if (errorProdutos) {
+    alert(errorProdutos.message);
   }
 
   return (
     <>
+      <ErroModal mostrar={errorCarrinho !== null}>
+        Algo deu errado, tente novamente
+      </ErroModal>
+      <SucessoModal mostrar={respostaCarrinho !== null}>
+        Item adicionado ao carrinho
+      </SucessoModal>
+      <CarregamentoModal mostrar={loadingProdutos || loadingCart} />
       <SaudacaoHome>
         <h1>Olá, {user?.nome}!</h1>
         <p>Do que precisa hoje?</p>
       </SaudacaoHome>
       <ProductsContainer>
-        {produtos.map((p) => (
+        {produtos?.map((p) => (
           <Product key={p._id}>
             <ProductInfo onClick={() => navigate(`/detalhes/${p._id}`)}>
               <img alt={p.nome} src={p.imagem} />
               <p>{p.nome}</p>
               <p>{converterValorParaReais(p.preco)}</p>
             </ProductInfo>
-            <AddToCart onClick={() => addToCart(p._id)}>+ carrinho</AddToCart>
+            <AddToCart onClick={() => adicionarItemNoCarrinho(p._id)}>
+              + carrinho
+            </AddToCart>
           </Product>
         ))}
       </ProductsContainer>
