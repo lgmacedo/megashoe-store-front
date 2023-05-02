@@ -28,7 +28,7 @@ export default function MyRoutes() {
         element={autenticado ? <Carrinho /> : <Navigate to="/" />}
       />
       <Route
-        path="/confirmacao"
+        path="/confirmacao/:idPedido"
         element={autenticado ? <Confirmacao /> : <Navigate to="/" />}
       />
       <Route

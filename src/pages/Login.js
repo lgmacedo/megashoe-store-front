@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useContext } from "react";
-import apiAuth from "../services/apiAuth";
+import apiAuth from "../services/auth.services";
 import { UserContext } from "../contexts/UserContext";
 
 export default function Login() {
