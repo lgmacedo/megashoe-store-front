@@ -3,6 +3,21 @@ import { CheckCircle, XCircle } from "@phosphor-icons/react";
 import Carregamento from "./Carregamento.js";
 import { useEffect, useState } from "react";
 
+export default function Modal({
+  children,
+  height = "150px",
+  width = "min(calc(100% - 64px), 400px)",
+  mostrar = false,
+}) {
+  return (
+    <StyledModalContainer mostrar={mostrar}>
+      <StyledModalConteudo mostrar={mostrar} width={width} height={height}>
+        {children}
+      </StyledModalConteudo>
+    </StyledModalContainer>
+  );
+}
+
 export function CarregamentoModal({
   children,
   height = "150px",
@@ -57,32 +72,6 @@ export function ErroModal({ children, mostrar = false }) {
         <XCircle size={32} weight="fill" color="#ef4444" />
         {children}
       </StyledModalDefined>
-    </StyledModalContainer>
-  );
-}
-
-export default function Modal({
-  children,
-  height = "150px",
-  width = "min(calc(100% - 64px), 400px)",
-  mostrar = false,
-}) {
-  const [show, setShow] = useState(mostrar);
-
-  useEffect(() => {
-    setShow(mostrar);
-  }, [mostrar]);
-
-  return (
-    <StyledModalContainer
-      onClick={(e) => {
-        if (e.target !== e.currentTarget) return;
-        setShow(false);
-      }}
-      mostrar={show}>
-      <StyledModalConteudo mostrar={show} width={width} height={height}>
-        {children}
-      </StyledModalConteudo>
     </StyledModalContainer>
   );
 }

@@ -13,6 +13,7 @@ function useRequest(promise) {
   const [error, setError] = useState(null);
 
   const refresh = useCallback(() => {
+    console.log("Request");
     setData(null);
     setError(null);
     setLoading(true);
@@ -26,7 +27,7 @@ function useRequest(promise) {
     refresh();
   }, [refresh]);
 
-  return { loading, error, data, refresh };
+  return { loading, error, data, setData, refresh };
 }
 
 /**
@@ -43,6 +44,7 @@ function useMutation(promise) {
 
   const mutate = useCallback(
     (props) => {
+      console.log("Mutate");
       setData(null);
       setError(null);
       setLoading(true);

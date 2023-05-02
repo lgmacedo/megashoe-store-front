@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   buscarProdutosPedido,
@@ -12,30 +12,37 @@ import { BotaoCustom } from "../styled.js";
 import ItemPedido from "../components/ItemPedido.js";
 import { calcularTotal } from "../utils/calcularTotal.js";
 import { converterTimestamp } from "../utils/converterTimestamp.js";
+import { useRequest } from "../hooks/request.hooks.js";
+import { CarregamentoModal, ErroModal } from "../components/Modal.js";
+import { wait } from "@testing-library/user-event/dist/utils/index.js";
 
 export default function Confirmacao() {
   const { user } = useContext(UserContext);
   const { idPedido } = useParams();
-  const [pedido, setPedido] = useState();
-  const [produtos, setProdutos] = useState();
 
-  useEffect(() => {
-    if (!idPedido || !user?.token) return;
-    getPedido({ idPedido, token: user.token })
-      .then(setPedido)
-      .catch((err) => console.log(err));
-  }, [user.token, idPedido]);
+  const buscarDadosPedido = useCallback(async () => {
+    try {
+      await wait(3000);
+      const pedido = await getPedido({ idPedido, token: user.token });
+      if (!pedido) throw Error("O pedido não foi encontrado");
+      const produtos = await buscarProdutosPedido(pedido.produtos);
+      return { pedido, produtos };
+    } catch (err) {
+      if (err.response?.data) throw Error(err.response.data);
+      throw Error(err.message);
+    }
+  }, [user?.token, idPedido]);
 
-  useEffect(() => {
-    if (!pedido) return;
-    buscarProdutosPedido(pedido.produtos).then((produtos) =>
-      setProdutos(produtos)
-    );
-  }, [pedido]);
+  const { loading, error, data } = useRequest(buscarDadosPedido);
+
+  const produtos = data?.produtos;
+  const pedido = data?.pedido;
 
   const total = calcularTotal(produtos) ?? 0;
   return (
     <ConfirmacaoMain>
+      <CarregamentoModal mostrar={loading} />
+      <ErroModal mostrar={error !== null}>{error?.message}</ErroModal>
       <ConfirmacaoPedidoConfirmado>
         <CheckCircle color="#A3E635" weight="fill" size={32} />{" "}
         <h1>Pedido confirmado!</h1>

@@ -3,43 +3,48 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import apiAuth from "../services/auth.services";
 import { UserContext } from "../contexts/UserContext";
+import { BotaoCustom } from "../styled.js";
+import { useMutation } from "../hooks/request.hooks.js";
+import { CarregamentoModal, ErroModal } from "../components/Modal.js";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", senha: "" });
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const { loading, error, mutate } = useMutation(login);
 
   function handleForm(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  async function login() {
+    try {
+      const res = await apiAuth.login({ ...form });
+      const { idUsuario, nome, email, token } = res.data;
+      setUser({ idUsuario, nome, email, token });
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ idUsuario, nome, email, token })
+      );
+      navigate("/home");
+    } catch (err) {
+      throw Error(err.response.data);
+    }
+  }
+
   function handleLogin(e) {
     e.preventDefault();
-    apiAuth
-      .login({ ...form })
-      .then((res) => {
-        console.log(res.data);
-        const { idUsuario, nome, email, token } = res.data;
-        setUser({ idUsuario, nome, email, token });
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ idUsuario, nome, email, token })
-        );
-        navigate("/home");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err.response.data);
-      });
+    mutate();
   }
 
   return (
     <LoginContainer>
+      <CarregamentoModal mostrar={loading} />
+      <ErroModal mostrar={error !== null}>{error?.message}</ErroModal>
       <Titulo>
         <h1>Bem vindo!</h1>
         <p>Faça login com email e senha</p>
       </Titulo>
-
       <Form onSubmit={handleLogin}>
         <input
           name="email"
@@ -58,7 +63,7 @@ export default function Login() {
           onChange={handleForm}
           required
         />
-        <button type="submit">Entrar</button>
+        <BotaoCustom type="submit">Entrar</BotaoCustom>
       </Form>
 
       <Cadastro to="/cadastro">
@@ -113,8 +118,7 @@ const Form = styled.form`
   gap: 8px;
   width: 100%;
   border-radius: 5px;
-  input,
-  button {
+  input {
     height: 45px;
     background: #404040;
     border-radius: 12px;
@@ -134,14 +138,8 @@ const Form = styled.form`
       line-height: 22px;
     }
   }
+
   button {
-    background: #a3e635;
-    font-family: "Lexend Deca";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 20px;
-    color: black;
-    cursor: pointer;
+    width: calc(100% - 64px);
   }
 `;
