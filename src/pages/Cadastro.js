@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import apiAuth from "../services/auth.services";
+import { useMutation } from "../hooks/request.hooks.js";
+import { CarregamentoModal, ErroModal } from "../components/Modal.js";
+import { BotaoCustom } from "../styled.js";
 
 export default function Cadastro() {
   const [form, setForm] = useState({ nome: "", email: "" });
@@ -9,6 +12,8 @@ export default function Cadastro() {
   const [senha, setSenha] = useState("");
   const [senhaRep, setSenhaRep] = useState("");
   const navigate = useNavigate();
+
+  const { loading, error, mutate } = useMutation(cadastro);
 
   function handleForm(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,31 +23,34 @@ export default function Cadastro() {
     setValida(senha === senhaRep);
   }, [senha, senhaRep]);
 
+  async function cadastro() {
+    try {
+      if (!valida) {
+        throw Error("As senhas não correspondem!");
+      }
+      await apiAuth.cadastro({ ...form, senha: senha });
+      navigate("/");
+    } catch (err) {
+      if (err.response?.data) {
+        throw Error(err.response.data);
+      }
+      throw Error(err.message);
+    }
+  }
+
   function handleCadastro(e) {
     e.preventDefault();
-    if (valida) {
-      apiAuth
-        .cadastro({ ...form, senha: senha })
-        .then((res) => {
-          console.log(res.data);
-          alert(res.data);
-          navigate("/");
-        })
-        .catch((err) => {
-          alert(err.response.data);
-        });
-    } else {
-      return alert("As senhas não correspondem!");
-    }
+    mutate();
   }
 
   return (
     <CadastroContainer>
+      <CarregamentoModal mostrar={loading} />
+      <ErroModal mostrar={error !== null}>{error?.message}</ErroModal>
       <Titulo>
         <h1>Cadastro</h1>
         <p>Cria sua conta com email e senha</p>
       </Titulo>
-
       <Form onSubmit={handleCadastro}>
         <input
           name="nome"
@@ -78,7 +86,7 @@ export default function Cadastro() {
           onChange={(e) => setSenhaRep(e.target.value)}
           required
         />
-        <button type="submit">Cadastrar</button>
+        <BotaoCustom type="submit">Cadastrar</BotaoCustom>
       </Form>
 
       <Login to="/">
@@ -153,15 +161,5 @@ const Form = styled.form`
       font-size: 18px;
       line-height: 22px;
     }
-  }
-  button {
-    background: #a3e635;
-    font-family: "Lexend Deca";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 20px;
-    color: black;
-    cursor: pointer;
   }
 `;
