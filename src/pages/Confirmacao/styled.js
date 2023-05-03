@@ -31,16 +31,4 @@ const ConfirmacaoPedidoConfirmado = styled.div`
   }
 `;
 
-const ConfirmacaoPedidoInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 16px;
-  div {
-    display: flex;
-    justify-content: space-between;
-    font-size: 18px;
-  }
-`;
-
-export { ConfirmacaoMain, ConfirmacaoPedidoConfirmado, ConfirmacaoPedidoInfo };
+export { ConfirmacaoMain, ConfirmacaoPedidoConfirmado };

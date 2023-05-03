@@ -1,23 +1,13 @@
 import { useCallback, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  buscarProdutosPedido,
-  getPedido,
-} from "../../services/pedido.services.js";
+import { getPedido } from "../../services/pedido.services.js";
 import { UserContext } from "../../contexts/UserContext.js";
-import { converterValorParaReais } from "../../utils/converterValorParaReais.js";
 import { CheckCircle } from "@phosphor-icons/react";
 import { BotaoCustom } from "../../styled.js";
-import ItemPedido from "../../components/ItemPedido.js";
-import { calcularTotal } from "../../utils/calcularTotal.js";
-import { converterTimestamp } from "../../utils/converterTimestamp.js";
 import { useRequest } from "../../hooks/request.hooks.js";
 import { CarregamentoModal, ErroModal } from "../../components/Modal.js";
-import {
-  ConfirmacaoMain,
-  ConfirmacaoPedidoConfirmado,
-  ConfirmacaoPedidoInfo,
-} from "./styled.js";
+import { ConfirmacaoMain, ConfirmacaoPedidoConfirmado } from "./styled.js";
+import ResumoPedido from "../../components/ResumoPedido.js";
 
 export default function Confirmacao() {
   const { user } = useContext(UserContext);
@@ -25,22 +15,15 @@ export default function Confirmacao() {
 
   const buscarDadosPedido = useCallback(async () => {
     try {
-      const pedido = await getPedido({ idPedido, token: user.token });
-      if (!pedido) throw Error("O pedido não foi encontrado");
-      const produtos = await buscarProdutosPedido(pedido.produtos);
-      return { pedido, produtos };
+      return await getPedido({ idPedido, token: user.token });
     } catch (err) {
       if (err.response?.data) throw Error(err.response.data);
       throw Error(err.message);
     }
   }, [user?.token, idPedido]);
 
-  const { loading, error, data } = useRequest(buscarDadosPedido);
+  const { loading, error, data: pedido } = useRequest(buscarDadosPedido);
 
-  const produtos = data?.produtos;
-  const pedido = data?.pedido;
-
-  const total = calcularTotal(produtos) ?? 0;
   return (
     <ConfirmacaoMain>
       <CarregamentoModal mostrar={loading} />
@@ -50,28 +33,8 @@ export default function Confirmacao() {
         <h1>Pedido confirmado!</h1>
       </ConfirmacaoPedidoConfirmado>
 
-      <ul>
-        {produtos?.map((item) => (
-          <ItemPedido
-            key={item._id}
-            quantidadeSelecionada={item.quantidadeSelecionada}
-            imagem={item.imagem}
-            nome={item.nome}
-            preco={item.preco}
-          />
-        ))}
-      </ul>
+      <ResumoPedido produtos={pedido.produtos} criadoEm={pedido.criadoEm} />
 
-      <ConfirmacaoPedidoInfo>
-        <div>
-          <p>Total:</p>
-          <p>{converterValorParaReais(total)}</p>
-        </div>
-        <div>
-          <p>Data:</p>
-          <p>{converterTimestamp(pedido?.criadoEm)}</p>
-        </div>
-      </ConfirmacaoPedidoInfo>
       <Link to="/home">
         <BotaoCustom>Voltar ao início</BotaoCustom>
       </Link>
