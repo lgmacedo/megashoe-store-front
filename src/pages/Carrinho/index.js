@@ -1,19 +1,19 @@
-import styled from "styled-components";
 import { useContext } from "react";
-import Navegacao from "../components/Navegacao.js";
-import { BotaoCustom } from "../styled.js";
-import { converterValorParaReais } from "../utils/converterValorParaReais.js";
-import { buscarProdutosCarrinho } from "../services/carrinho.services.js";
-import CarrinhoLista from "../components/CarrinhoLista.js";
-import { getItensCarrinho } from "../storage/carrinho.storage.js";
-import { criarPedido } from "../services/pedido.services.js";
-import { UserContext } from "../contexts/UserContext.js";
-import { limparCarrinho } from "../storage/carrinho.storage.js";
+import Navegacao from "../../components/Navegacao.js";
+import { BotaoCustom } from "../../styled.js";
+import { converterValorParaReais } from "../../utils/converterValorParaReais.js";
+import { buscarProdutosCarrinho } from "../../services/carrinho.services.js";
+import CarrinhoLista from "../../components/CarrinhoLista.js";
+import { getItensCarrinho } from "../../storage/carrinho.storage.js";
+import { criarPedido } from "../../services/pedido.services.js";
+import { UserContext } from "../../contexts/UserContext.js";
+import { limparCarrinho } from "../../storage/carrinho.storage.js";
 import { useNavigate } from "react-router-dom";
-import { calcularTotal } from "../utils/calcularTotal.js";
-import CarrinhoVazio from "../components/CarrinhoVazio.js";
-import { useMutation, useRequest } from "../hooks/request.hooks.js";
-import { CarregamentoModal, ErroModal } from "../components/Modal.js";
+import { calcularTotal } from "../../utils/calcularTotal.js";
+import CarrinhoVazio from "../../components/CarrinhoVazio.js";
+import { useMutation, useRequest } from "../../hooks/request.hooks.js";
+import { CarregamentoModal, ErroModal } from "../../components/Modal.js";
+import { CarrinhoMain, CarrinhoMainTotal } from "./styled.js";
 
 async function buscarCarrinho() {
   try {
@@ -88,32 +88,3 @@ export default function Carrinho() {
     </>
   );
 }
-
-const CarrinhoMain = styled.main`
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 75px);
-  hr {
-    border: none;
-    height: 1px;
-    background: #404040;
-    margin: 32px 0;
-  }
-`;
-
-const CarrinhoMainTotal = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 20px;
-  width: 100%;
-  margin-bottom: 32px;
-
-  strong:last-child {
-    color: #a3e635;
-    font-weight: 600;
-  }
-`;

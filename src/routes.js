@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Carrinho from "./pages/Carrinho.js";
-import Login from "./pages/Login.js";
-import Cadastro from "./pages/Cadastro.js";
-import Confirmacao from "./pages/Confirmacao.js";
-import Detalhes from "./pages/Detalhes.js";
-import Home from "./pages/Home.js";
-import User from "./pages/User.js";
+import Carrinho from "./pages/Carrinho";
+import Login from "./pages/Login";
+import Cadastro from "./pages/Cadastro";
+import Confirmacao from "./pages/Confirmacao";
+import Detalhes from "./pages/Detalhes";
+import Home from "./pages/Home";
+import User from "./pages/User";
 import { useContext } from "react";
 import { UserContext } from "./contexts/UserContext.js";
 
