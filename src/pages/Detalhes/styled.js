@@ -5,6 +5,10 @@ const ProductDetailsContainer = styled.div`
   flex-direction: column;
   position: relative;
 
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
   img {
     margin-bottom: 41px;
     width: 90%;

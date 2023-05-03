@@ -6,6 +6,9 @@ const SaudacaoHome = styled.div`
   flex-direction: column;
   gap: 8px;
 
+  max-width: 1200px;
+  margin: 0 auto;
+
   h1 {
     font-size: 24px;
     font-weight: bold;
@@ -24,6 +27,9 @@ const ProductsContainer = styled.div`
   row-gap: 24px;
   padding: 44px 32px;
   margin-bottom: 74px;
+
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
 export { ProductsContainer, SaudacaoHome };

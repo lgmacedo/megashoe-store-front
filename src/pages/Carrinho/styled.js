@@ -13,6 +13,9 @@ const CarrinhoMain = styled.main`
     background: #404040;
     margin: 32px 0;
   }
+
+  max-width: 600px;
+  margin: 0 auto;
 `;
 
 const CarrinhoMainTotal = styled.div`

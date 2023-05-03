@@ -9,6 +9,9 @@ const UserMain = styled.main`
   min-height: calc(100vh - 75px);
   gap: 32px;
 
+  max-width: 600px;
+  margin: 0 auto;
+
   padding-bottom: calc(75px + 32px);
 
   h1 {

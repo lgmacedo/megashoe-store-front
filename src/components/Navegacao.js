@@ -35,6 +35,8 @@ const StyledNavegacao = styled.footer`
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 
     a:nth-of-type(2) {
       order: 3;
