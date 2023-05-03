@@ -7,8 +7,7 @@ const ProductDetailsContainer = styled.div`
 
   img {
     margin-bottom: 41px;
-    width: 100%;
-    height: 350px;
+    width: 90%;
     object-fit: cover;
   }
 
