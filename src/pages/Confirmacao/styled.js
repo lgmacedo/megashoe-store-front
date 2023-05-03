@@ -7,6 +7,10 @@ const ConfirmacaoMain = styled.main`
   justify-content: center;
   align-items: center;
   padding: 32px;
+
+  max-width: 600px;
+  margin: 0 auto;
+
   a {
     width: 100%;
     margin-top: 64px;
