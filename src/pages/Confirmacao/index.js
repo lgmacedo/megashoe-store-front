@@ -33,7 +33,9 @@ export default function Confirmacao() {
         <h1>Pedido confirmado!</h1>
       </ConfirmacaoPedidoConfirmado>
 
-      <ResumoPedido produtos={pedido.produtos} criadoEm={pedido.criadoEm} />
+      {pedido && (
+        <ResumoPedido produtos={pedido.produtos} criadoEm={pedido.criadoEm} />
+      )}
 
       <Link to="/home">
         <BotaoCustom>Voltar ao início</BotaoCustom>
