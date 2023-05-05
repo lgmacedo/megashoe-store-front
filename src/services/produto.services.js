@@ -11,4 +11,12 @@ async function getProdutosPorId(idsProdutos) {
   }
 }
 
-export { getProdutosPorId };
+async function buscarProdutos() {
+  try {
+    return (await apiClient.get("/produtos")).data;
+  } catch (err) {
+    throw Error(err.response?.data ?? err.message);
+  }
+}
+
+export { getProdutosPorId, buscarProdutos };
