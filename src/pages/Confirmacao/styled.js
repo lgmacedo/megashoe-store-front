@@ -7,6 +7,7 @@ const ConfirmacaoMain = styled.main`
   justify-content: center;
   align-items: center;
   padding: 32px;
+  padding-bottom: calc(75px + 32px);
 
   max-width: 600px;
   margin: 0 auto;

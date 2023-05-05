@@ -7,6 +7,7 @@ const CarrinhoMain = styled.main`
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 75px);
+  padding-bottom: calc(75px + 32px);
   hr {
     border: none;
     height: 1px;

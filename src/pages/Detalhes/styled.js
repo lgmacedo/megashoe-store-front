@@ -7,7 +7,7 @@ const ProductDetailsContainer = styled.div`
 
   max-width: 600px;
   margin: 0 auto;
-  padding-bottom: 32px;
+  padding-bottom: calc(75px + 32px);
 
   img {
     margin-bottom: 41px;

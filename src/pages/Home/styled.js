@@ -26,10 +26,11 @@ const ProductsContainer = styled.div`
   column-gap: 16px;
   row-gap: 24px;
   padding: 44px 32px;
-  margin-bottom: 74px;
+  padding-bottom: calc(75px + 32px);
 
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 74px;
 `;
 
 export { ProductsContainer, SaudacaoHome };
