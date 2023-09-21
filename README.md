@@ -13,6 +13,29 @@ Aplicativo de e-commerce focado em calçados esportivos. Possui as funcionalidad
 
 [Acesse aqui.](https://mega-shoestore.vercel.app/home)
 
+## Como rodar
+
+Primeiro, é necessário instalar todas as dependências necessárias para essa aplicação através do Node Package Manager:
+
+```bash
+$ npm install
+```
+
+Esse comando deve ser feito na raiz do projeto.
+
+Para rodar a aplicação:
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
 ## Stack
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
